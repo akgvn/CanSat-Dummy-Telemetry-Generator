@@ -28,7 +28,6 @@ double air_speed;      // Air speed relative to payload in m/s
 int state;             // int yerine yukardaki enum tipinde olmalı
 double particle_count; // mg/m^3
 
-// TODO: Everything.
 void setup()
 {
   Serial.begin(9600);
@@ -78,36 +77,39 @@ void loop()
   // Bunun ne olacağını bilemiyoruz.
   particle_count = randNum / 1000.0; // mg/m^3
 
-  Serial.print(team_id); // team id
-  Serial.print(",");
-  Serial.print(mission_time); // mission time
-  Serial.print(",");
-  Serial.print(packet_count); // packet count
-  Serial.print(",");
-  Serial.print(daltitude, 1); // altitude
-  Serial.print(",");
-  Serial.print(pressure); // pressure
-  Serial.print(",");
-  Serial.print(temp, 1); // temp
-  Serial.print(",");
-  Serial.print(voltage, 2); // voltage
-  Serial.print(",");
-  Serial.print(gps_time); // gps_time
-  Serial.print(",");
-  Serial.print(gps_lati, 4); // gps_lati
-  Serial.print(",");
-  Serial.print(gps_long, 4); // gps_long
-  Serial.print(",");
-  Serial.print(gps_alti, 1); // gps_alti
-  Serial.print(",");
-  Serial.print(gps_sats); // gps_sats
-  Serial.print(",");
-  Serial.print(air_speed); // air_speed
-  Serial.print(",");
-  Serial.print(state); // software_state
-  Serial.print(",");
-  Serial.print(particle_count, 3); // particle_count
-  Serial.println();
+  // Her şeyi bir string'de toplayıp en son yollamamızın sebebi 
+  // packet loss gibi bir problemin önüne geçmek
+  String packet = String(team_id); // team id
+  packet += String(",");
+  packet += String(mission_time); // mission time
+  packet += String(",");
+  packet += String(packet_count); // packet count
+  packet += String(",");
+  packet += String(daltitude, 1); // altitude
+  packet += String(",");
+  packet += String(pressure); // pressure
+  packet += String(",");
+  packet += String(temp, 1); // temp
+  packet += String(",");
+  packet += String(voltage, 2); // voltage
+  packet += String(",");
+  packet += String(gps_time); // gps_time
+  packet += String(",");
+  packet += String(gps_lati, 4); // gps_lati
+  packet += String(",");
+  packet += String(gps_long, 4); // gps_long
+  packet += String(",");
+  packet += String(gps_alti, 1); // gps_alti
+  packet += String(",");
+  packet += String(gps_sats); // gps_sats
+  packet += String(",");
+  packet += String(air_speed); // air_speed
+  packet += String(",");
+  packet += String(state); // software_state
+  packet += String(",");
+  packet += String(particle_count, 3); // particle_count
+
+  Serial.println(packet);
 
   packet_count += 1;
 
