@@ -24,9 +24,7 @@ double gps_lati = 0;   // resolution is 0.0001 (10^-4)
 double gps_long = 0;   // resolution is 0.0001 (10^-4)
 double gps_alti = 0;   // meters above mean sea level, resolution is 0.1m
 int gps_sats = 0;      // number of GPS satellites
-double air_speed;      // Air speed relative to payload in m/s
 int state;             // int yerine yukardaki enum tipinde olmalı
-double particle_count; // mg/m^3
 
 void setup()
 {
@@ -53,7 +51,7 @@ void loop()
   // resolution is 0.1 meters.
   double aux_alti = altitude;
   altitude += (randNum % 15);
-  double daltitude = (double)altitude / 10; // Double görünsün istiyoruz
+  double dbl_altitude = (double)altitude / 10; // Double görünsün istiyoruz
 
   // Basınç hesaplama formulünü bozup bu hale getirdim.
   pressure = 101325 * (0.9999 * altitude);
@@ -74,42 +72,46 @@ void loop()
   // TODO Daha uçuş phase'lerini eklemedim ondan hep 0.
   state = 0;
 
-  // Bunun ne olacağını bilemiyoruz.
-  particle_count = randNum / 1000.0; // mg/m^3
+  // Her şeyi bir string'de toplayıp en son yollamamızın sebebi packet loss gibi bir problemin önüne geçmek
+  auto comma  = String(",");
+  auto container_packet = String(team_id);     container_packet += comma;
+  container_packet += String(mission_time);    container_packet += comma;
+  container_packet += String(packet_count);    container_packet += comma;
+  container_packet += String("C");             container_packet += comma; // "C" for container
+  container_packet += String("S");             container_packet += comma; // "S" for simulation
+  container_packet += String("1,1");           container_packet += comma; // released both
+  container_packet += String(dbl_altitude, 1); container_packet += comma;
+  container_packet += String(temp, 1);         container_packet += comma;
+  container_packet += String(voltage, 2);      container_packet += comma;
+  container_packet += String(gps_time);        container_packet += comma;
+  container_packet += String(gps_lati, 4);     container_packet += comma;
+  container_packet += String(gps_long, 4);     container_packet += comma;
+  container_packet += String(gps_alti, 1);     container_packet += comma;
+  container_packet += String(gps_sats);        container_packet += comma;
+  container_packet += String(state);           container_packet += comma;
+  container_packet += String(packet_count);    container_packet += comma;
+  container_packet += String(packet_count);
 
-  // Her şeyi bir string'de toplayıp en son yollamamızın sebebi 
-  // packet loss gibi bir problemin önüne geçmek
-  String packet = String(team_id); // team id
-  packet += String(",");
-  packet += String(mission_time); // mission time
-  packet += String(",");
-  packet += String(packet_count); // packet count
-  packet += String(",");
-  packet += String(daltitude, 1); // altitude
-  packet += String(",");
-  packet += String(pressure); // pressure
-  packet += String(",");
-  packet += String(temp, 1); // temp
-  packet += String(",");
-  packet += String(voltage, 2); // voltage
-  packet += String(",");
-  packet += String(gps_time); // gps_time
-  packet += String(",");
-  packet += String(gps_lati, 4); // gps_lati
-  packet += String(",");
-  packet += String(gps_long, 4); // gps_long
-  packet += String(",");
-  packet += String(gps_alti, 1); // gps_alti
-  packet += String(",");
-  packet += String(gps_sats); // gps_sats
-  packet += String(",");
-  packet += String(air_speed); // air_speed
-  packet += String(",");
-  packet += String(state); // software_state
-  packet += String(",");
-  packet += String(particle_count, 3); // particle_count
+  auto sp1_packet = String(team_id);     sp1_packet += comma;
+  sp1_packet += String(mission_time);    sp1_packet += comma;
+  sp1_packet += String(packet_count);    sp1_packet += comma;
+  sp1_packet += String("SP1");           sp1_packet += comma; // "SP1" for science payload 1
+  sp1_packet += String(dbl_altitude, 1); sp1_packet += comma;
+  sp1_packet += String(temp, 1);         sp1_packet += comma;
+  sp1_packet += String("140.3");
 
-  Serial.println(packet);
+  auto sp2_packet = String(team_id);     sp2_packet += comma;
+  sp2_packet += String(mission_time);    sp2_packet += comma;
+  sp2_packet += String(packet_count);    sp2_packet += comma;
+  sp2_packet += String("SP2");           sp2_packet += comma;
+  sp2_packet += String(dbl_altitude, 1); sp2_packet += comma;
+  sp2_packet += String(temp, 1);         sp2_packet += comma;
+  sp2_packet += String("120.5");
+
+
+  Serial.println(container_packet);
+  Serial.println(sp1_packet);
+  Serial.println(sp2_packet);
 
   packet_count += 1;
 
