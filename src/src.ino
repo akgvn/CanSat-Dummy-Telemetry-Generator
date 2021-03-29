@@ -66,9 +66,6 @@ void loop()
   // Bunun sayısı aslında önemli değil ama gittikçe artırıyorum.
   gps_sats += 2;
 
-  // Yükseklik değişiminden bir şeyler salladım.
-  air_speed = (altitude - aux_alti) * 2;
-
   // TODO Daha uçuş phase'lerini eklemedim ondan hep 0.
   state = 0;
 
